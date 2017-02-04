@@ -1,0 +1,24 @@
+<html>  
+    <head>
+        <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="./node_modules/parse/dist/parse.min.js"></script>
+        <script src="./node_modules/rxjs/bundles/Rx.min.js"></script>
+    </head>  
+    <body>
+        <script>
+            $(document).ready(function() {
+                Parse.initialize("myAppId"); 
+                Parse.serverURL = 'http://localhost:1337/parse';
+                
+                var query = new Parse.Query('Order');    
+                query.equalTo('userId', 1);
+                var subscription = query.subscribe();                
+                Rx.Observable
+                    .fromEvent(subscription, 'create')
+                    .subscribe(function(order) {
+                        console.log(order.get('quantity'));
+                    });
+            });            
+        </script>
+    </body>
+</html>
